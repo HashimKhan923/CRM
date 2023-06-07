@@ -34,9 +34,9 @@ Route::get('/logout/{id}', 'App\Http\Controllers\AuthController@logout');
 /// admin Register
 Route::post('/admin/register', 'App\Http\Controllers\Admin\AuthController@register');
 
-
-
-       /////////////////////////////////// Admin Routes \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+Route::group(['middleware' => ['auth:api']], function(){
+    
+        /////////////////////////////////// Admin Routes \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
        Route::get('/admin/profile/view/{id}', 'App\Http\Controllers\Admin\AuthController@profile_view');
        Route::post('/admin/profile', 'App\Http\Controllers\Admin\AuthController@profile_update');
@@ -55,6 +55,26 @@ Route::post('/admin/register', 'App\Http\Controllers\Admin\AuthController@regist
                 Route::post('update','update');
                 Route::get('delete/{id}','delete');
                 Route::get('status/{id}','changeStatus');
+            });
+        });
+
+                                        /// Attendence \\\
+
+            Route::group(['prefix' => '/admin/attendence/'], function() {
+            Route::controller(App\Http\Controllers\Admin\AttendenceController::class)->group(function () {
+                Route::get('show','index');
+                Route::post('search','search');
+            });
+        });   
+        
+        
+                                         /// Users \\\
+
+        Route::group(['prefix' => '/admin/users/'], function() {
+            Route::controller(App\Http\Controllers\Admin\UserController::class)->group(function () {
+                Route::get('show','index');
+                Route::get('status/{id}','changeStatus');
+                Route::get('delete/{id}','delete');
             });
         });
 
@@ -80,6 +100,7 @@ Route::post('/admin/register', 'App\Http\Controllers\Admin\AuthController@regist
             Route::group(['prefix' => 'attendence/'], function() {
             Route::controller(App\Http\Controllers\User\AttendenceController::class)->group(function () {
                 Route::get('show/{id}','index');
+                Route::post('search','search');
                 Route::get('time_in/{id}','time_in');
                 Route::get('time_out/{id}','time_out');
             });
@@ -95,3 +116,8 @@ Route::post('/admin/register', 'App\Http\Controllers\Admin\AuthController@regist
                 Route::get('break_out/{id}','break_out');
             });
         });        
+
+
+});
+
+       
