@@ -15,7 +15,7 @@ class AttendenceController extends Controller
         return response()->json(['Attendence'=>$Attendence]);
     }
 
-    public function search()
+    public function search(Request $request)
     {
         $data = Time::with('user')->where('created_at','>=',$request->from_date)->where('created_at','<=',$request->to_date)->get();
     }

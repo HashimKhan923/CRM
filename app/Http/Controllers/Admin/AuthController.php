@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\UserDocumantion;
 use Illuminate\Support\Facades\Hash;
 use Validator;
 
@@ -30,9 +31,29 @@ class AuthController extends Controller
         $user->designation = $request->designation;
         $user->shift_id = $request->shift_id;
         $user->password = Hash::make($request->password);
-        $user->role_id = $request->role_id;
-        $user->is_active = 1;
+        $user->role = $request->role;
+        $user->status = 1;
         $user->save();
+
+        $userDocumantion = new UserDocumantion();
+        $userDocumantion->user_id = $user->id;
+        if($request->file('documents'))
+        {
+            
+            foreach($request->documents as $document)
+            { 
+                $file= $document;
+                $filename= date('YmdHi').$file->getClientOriginalName();
+                $file->move(public_path('UserDocumantion'), $filename);
+                $UserDocumantion[] = $filename;
+                
+            }
+
+            $userDocumantion->documents = $UserDocumantion;
+
+        }
+
+        $userDocumantion->save();
 
         $token = $user->createToken('Laravel Password Grant Client')->accessToken;
         $response = ['status'=>true,"message" => "Register Successfully",'token' => $token];

@@ -7,5 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserDocumantion extends Model
 {
+    protected $casts = [
+        'documents' => 'array',
+    ];
     use HasFactory;
 }

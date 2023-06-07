@@ -23,7 +23,7 @@ return new class extends Migration
             $table->bigInteger('shift_id')->unsigned()->nullable();
             $table->foreign('shift_id')->references('id')->on('shifts')->onDelete('cascade')->onUpdate('cascade'); 
             $table->integer('status')->default(1);
-            $table->integer('role')->default(2);
+            $table->string('role')->default('user');
             $table->timestamps();
         });
     }
