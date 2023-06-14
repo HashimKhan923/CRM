@@ -43,8 +43,8 @@ class AuthController extends Controller
             foreach($request->documents as $document)
             { 
                 $file= $document;
-                $filename= date('YmdHi').$file->getClientOriginalName();
-                $file->move(public_path('UserDocumantion'), $filename);
+                $filename= date('YmdHis').$file->getClientOriginalName();
+                $file->storeAs('public', $filename);
                 $UserDocumantion[] = $filename;
                 
             }
