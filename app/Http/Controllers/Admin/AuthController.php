@@ -35,25 +35,25 @@ class AuthController extends Controller
         $user->status = 1;
         $user->save();
 
-        // $userDocumantion = new UserDocumantion();
-        // $userDocumantion->user_id = $user->id;
-        // if($request->file('documents'))
-        // {
+        $userDocumantion = new UserDocumantion();
+        $userDocumantion->user_id = $user->id;
+        if($request->file('documents'))
+        {
             
-        //     foreach($request->documents as $document)
-        //     { 
-        //         $file= $document;
-        //         $filename= date('YmdHis').$file->getClientOriginalName();
-        //         $file->storeAs('public', $filename);
-        //         $UserDocumantion[] = $filename;
+            foreach($request->documents as $document)
+            { 
+                $file= $document;
+                $filename= date('YmdHis').$file->getClientOriginalName();
+                $file->storeAs('public', $filename);
+                $UserDocumantion[] = $filename;
                 
-        //     }
+            }
 
-        //     $userDocumantion->documents = $UserDocumantion;
+            $userDocumantion->documents = $UserDocumantion;
 
-        // }
+        }
 
-        // $userDocumantion->save();
+        $userDocumantion->save();
 
         $token = $user->createToken('Laravel Password Grant Client')->accessToken;
         $response = ['status'=>true,"message" => "Register Successfully",'token' => $token];
