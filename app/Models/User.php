@@ -42,4 +42,15 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function shift()
+    {
+        return $this->hasOne(Shift::class,'id','shift_id');
+    }
+
+
+    public function department()
+    {
+        return $this->hasOne(Department::class,'id','department_id');
+    }
 }

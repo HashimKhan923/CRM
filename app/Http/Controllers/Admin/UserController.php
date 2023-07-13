@@ -10,7 +10,7 @@ class UserController extends Controller
 {
     public function index()
     {
-        $all_users = User::where('role_id',2)->get();
+        $all_users = User::with('shift','department')->where('role_id',2)->get();
 
         return response()->json(['all_users'=>$all_users]);
     }
