@@ -107,7 +107,8 @@ Route::group(['middleware' => ['auth:api']], function(){
         });
 
 
-                                         /// Break \\\
+
+            /// Break \\\
 
             Route::group(['prefix' => 'break/'], function() {
             Route::controller(App\Http\Controllers\User\BreakController::class)->group(function () {
@@ -115,9 +116,10 @@ Route::group(['middleware' => ['auth:api']], function(){
                 Route::post('break_in','break_in');
                 Route::get('break_out/{id}','break_out');
             });
-        });        
+        }); 
 
 
 });
+       
 
        

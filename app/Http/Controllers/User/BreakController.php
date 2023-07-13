@@ -23,7 +23,7 @@ class BreakController extends Controller
 
     public function break_in(Request $request)
     {
-        
+       return $request->ip();
         $new = new Breaks();
         $new->user_id = $request->user_id;
         $new->type = $request->type;
