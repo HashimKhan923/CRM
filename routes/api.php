@@ -58,6 +58,19 @@ Route::group(['middleware' => ['auth:api']], function(){
             });
         });
 
+
+                                               /// Department \\\
+
+            Route::group(['prefix' => '/admin/department/'], function() {
+            Route::controller(App\Http\Controllers\Admin\DepartmentController::class)->group(function () {
+                Route::get('show','index');
+                Route::post('create','create');
+                Route::post('update','update');
+                Route::get('delete/{id}','delete');
+                Route::get('status/{id}','changeStatus');
+            });
+        });
+
                                         /// Attendence \\\
 
             Route::group(['prefix' => '/admin/attendence/'], function() {
