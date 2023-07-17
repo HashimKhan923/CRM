@@ -33,7 +33,8 @@ class AuthController extends Controller
         $user->designation = $request->designation;
         $user->shift_id = $request->shift_id;
         $user->password = Hash::make($request->password);
-        $user->role = $request->role;
+        $user->role_id = $request->role_id;
+        $user->manager_id = $request->manager_id;
         $user->status = 1;
         $user->save();
 
