@@ -20,8 +20,8 @@ return new class extends Migration
             $table->string('password');
             $table->string('designation')->nullable();
             $table->rememberToken();
-            $table->bigInteger('deparment_id')->unsigned()->nullable();
-            $table->foreign('deparment_id')->references('id')->on('departments')->onDelete('cascade')->onUpdate('cascade');
+            $table->bigInteger('department_id')->unsigned()->nullable();
+            $table->foreign('department_id')->references('id')->on('departments')->onDelete('cascade')->onUpdate('cascade');
             $table->bigInteger('shift_id')->unsigned()->nullable();
             $table->foreign('shift_id')->references('id')->on('shifts')->onDelete('cascade')->onUpdate('cascade'); 
             $table->integer('status')->default(1);
