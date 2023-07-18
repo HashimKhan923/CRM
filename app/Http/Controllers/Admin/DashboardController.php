@@ -16,6 +16,6 @@ class DashboardController extends Controller
         $DepartmentCount = Department::count();
         $ShiftCount = Shift::count();
 
-        return redirect()->json(['UserCount'=>$UserCount,'DepartmentCount'=>$DepartmentCount,'ShiftCount'=>$ShiftCount]);
+        return response()->json(['UserCount'=>$UserCount,'DepartmentCount'=>$DepartmentCount,'ShiftCount'=>$ShiftCount]);
     }
 }
