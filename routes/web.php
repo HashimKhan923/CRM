@@ -13,9 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('admin.index');
-});
+
 
 
 //common routes start
@@ -40,7 +38,7 @@ Route::post('/admin/register', 'App\Http\Controllers\Admin\AuthController@regist
        Route::post('/admin/profile', 'App\Http\Controllers\Admin\AuthController@profile_update');
        Route::get('/logout', 'App\Http\Controllers\AuthController@logout');
        Route::get('/admin/profile/check', 'App\Http\Controllers\Admin\AuthController@usercheck'); 
-       Route::get('/admin/dashboard','App\Http\Controllers\Admin\DashboardController@index');
+       Route::get('/admin/dashboard','App\Http\Controllers\Admin\DashboardController@index')->name('admin.dashboard');
 
 
 
@@ -48,10 +46,12 @@ Route::post('/admin/register', 'App\Http\Controllers\Admin\AuthController@regist
 
         Route::group(['prefix' => '/admin/shift/'], function() {
             Route::controller(App\Http\Controllers\Admin\ShiftController::class)->group(function () {
-                Route::get('show','index');
-                Route::post('create','create');
-                Route::post('update','update');
-                Route::get('delete/{id}','delete');
+                Route::get('show','index')->name('admin.shift.show');
+                Route::get('create_form','create_form')->name('admin.shift.create.form');
+                Route::post('create','create')->name('admin.shift.create');
+                Route::get('update_form/{id}','update_form')->name('admin.shift.update.form');
+                Route::post('update','update')->name('admin.shift.update');
+                Route::get('delete/{id}','delete')->name('admin.shift.delete');
                 Route::get('status/{id}','changeStatus');
             });
         });
@@ -61,10 +61,12 @@ Route::post('/admin/register', 'App\Http\Controllers\Admin\AuthController@regist
 
             Route::group(['prefix' => '/admin/department/'], function() {
             Route::controller(App\Http\Controllers\Admin\DepartmentController::class)->group(function () {
-                Route::get('show','index');
-                Route::post('create','create');
-                Route::post('update','update');
-                Route::get('delete/{id}','delete');
+                Route::get('show','index')->name('admin.department.show');
+                Route::get('create_form','create_form')->name('admin.department.create.form');
+                Route::post('create','create')->name('admin.department.create');
+                Route::get('update_form/{id}','update_form')->name('admin.department.update.form');
+                Route::post('update','update')->name('admin.department.update');
+                Route::get('delete/{id}','delete')->name('admin.department.delete');
                 Route::get('status/{id}','changeStatus');
             });
         });

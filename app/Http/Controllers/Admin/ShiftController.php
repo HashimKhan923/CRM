@@ -5,14 +5,24 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Shift;
+use App\Models\ProductVariant;
 
 class ShiftController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $shifts = Shift::all();
 
-        return response()->json(['shifts'=>$shifts]);
+        if ($request->wantsJson()) {
+            return response()->json(['shifts'=>$shifts]);  
+        }
+
+        return view('admin.shifts.index', compact('shifts')); 
+    }
+
+    public function create_form()
+    {
+        return view('admin.shifts.create');
     }
 
     public function create(Request $request)
@@ -23,8 +33,14 @@ class ShiftController extends Controller
         $new->time_to = $request->time_to;
         $new->save();
 
-        $response = ['status'=>true,"message" => "New Shift Created Successfully!"];
-        return response($response, 200);
+        if ($request->wantsJson()) {
+            $response = ['status'=>true,"message" => "New Shift Created Successfully!"];
+            return response($response, 200);
+            }
+    
+            session()->flash('success', 'New Shift Created Successfully!');
+    
+            return redirect()->route('admin.shift.show');
     }
 
     public function update(Request $request)

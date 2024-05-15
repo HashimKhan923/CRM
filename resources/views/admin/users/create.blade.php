@@ -2,10 +2,10 @@
 
 @section('content')
 <div class="container-fluid px-4">
-                        <h1 class="mt-4">Users</h1>
+                        <h1 class="mt-4">Add New User</h1>
                         <ol class="breadcrumb mb-4">
                             <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
-                            <li class="breadcrumb-item active">Users</li>
+                            <li class="breadcrumb-item active">Add New User</li>
                         </ol>
 
                         <div class="card mb-4">

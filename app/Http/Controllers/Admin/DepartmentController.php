@@ -7,12 +7,21 @@ use Illuminate\Http\Request;
 use App\Models\Department;
 class DepartmentController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $departments = Department::all();
 
-        return response()->json(['departments'=>$departments]);
-    }
+        if ($request->wantsJson()) {
+            return response()->json(['departments'=>$departments]);  
+        }
+
+        return view('admin.departments.index', compact('departments'));   
+     }
+
+     public function create_form()
+     {
+         return view('admin.departments.create');
+     }
 
     public function create(Request $request)
     {
@@ -20,26 +29,52 @@ class DepartmentController extends Controller
         $new->name = $request->name;
         $new->save();
 
-        $response = ['status'=>true,"message" => "New Department Created Successfully!"];
-        return response($response, 200);
+
+        if ($request->wantsJson()) {
+            $response = ['status'=>true,"message" => "New Department Created Successfully!"];
+            return response($response, 200);
+            }
+    
+            session()->flash('success', 'New Department Created Successfully!');
+    
+            return redirect()->route('admin.department.show');
+    }
+
+    public function update_form($id)
+    {
+        $data = Department::where('id',$id)->first();
+
+        return view('admin.departments.update',compact('data'));
     }
 
     public function update(Request $request)
     {
-        $update = Department::where('id',$request->id)->first();
+        $update = Department::where('id',$request->department_id)->first();
         $update->name = $request->name;
         $update->save();
 
-        $response = ['status'=>true,"message" => "Department Updated Successfully!"];
-        return response($response, 200);
+        if ($request->wantsJson()) {
+            $response = ['status'=>true,"message" => "Department Updated Successfully"];
+            return response($response, 200);
+            }
+    
+            session()->flash('success', 'Department Updated Successfully');
+    
+            return redirect()->route('admin.department.show');
     }
 
-    public function delete($id)
+    public function delete(Request $request, $id)
     {
         Department::find($id)->delete();
 
-        $response = ['status'=>true,"message" => "Deleted Successfully!"];
-        return response($response, 200);
+        if ($request->wantsJson()) {
+            $response = ['status'=>true,"message" => "Department Deleted Successfully"];
+            return response($response, 200);
+            }
+    
+            session()->flash('success', 'Department Deleted Successfully');
+    
+            return redirect()->route('admin.department.show');
 
     }
 
