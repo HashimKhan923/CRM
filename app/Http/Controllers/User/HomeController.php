@@ -75,7 +75,6 @@ class HomeController extends Controller
        $response = ['status'=>true,"TotalTime"=>$totalTime->toTimeString(),"RemainingTime"=>$remainingTime->toTimeString(),"message" => $message];
        return response($response, 200);
 
-    //    return $totalTime->toTimeString();
 
 
 

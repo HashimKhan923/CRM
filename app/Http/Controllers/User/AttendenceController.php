@@ -37,25 +37,20 @@ class AttendenceController extends Controller
 
         $ShiftTimeIn = Carbon::parse($check_shift->time_from);
         $ShiftTimeOut = Carbon::parse($check_shift->time_to);
-
-        
-
         $ShiftTimeIn = $ShiftTimeIn->toTimeString();
         $ShiftTimeOut = $ShiftTimeOut->toTimeString();
-
-        
-
-        $dt = Carbon::now('Asia/Karachi');
-        $TodayTime = $dt->toTimeString();
-
-
-        $TodayTime = Carbon::parse($TodayTime);
         $ShiftTimeIn = Carbon::parse($ShiftTimeIn);
         $ShiftTimeOut = Carbon::parse($ShiftTimeOut);
+        
+
+        $CurrentTime = Carbon::now('Asia/Karachi');
+        $CurrentTime = $CurrentTime->toTimeString();
+        $CurrentTime = Carbon::parse($CurrentTime);
+
 
         
 
-        if($TodayTime->gt($ShiftTimeIn) && $TodayTime->lt($ShiftTimeOut))
+        if($CurrentTime->gt($ShiftTimeIn) && $CurrentTime->lt($ShiftTimeOut))
         {
 
             $check = Time::where('user_id',$id)->whereDate('created_at', Carbon::today('Asia/Karachi'))->first();

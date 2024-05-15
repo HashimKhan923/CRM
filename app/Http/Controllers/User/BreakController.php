@@ -23,9 +23,9 @@ class BreakController extends Controller
 
     public function break_in(Request $request)
     {
-       return $request->ip();
         $new = new Breaks();
         $new->user_id = $request->user_id;
+        $new->time_id = $request->time_id;
         $new->type = $request->type;
         $new->time_in = Carbon::now('Asia/Karachi');
         $new->save();
