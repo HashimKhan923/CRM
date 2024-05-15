@@ -43,24 +43,43 @@ class ShiftController extends Controller
             return redirect()->route('admin.shift.show');
     }
 
+    public function update_form($id)
+    {
+        $data = Shift::where('id',$id)->first();
+
+        return view('admin.shifts.update',compact('data'));
+    }
+
     public function update(Request $request)
     {
-        $update = Shift::where('id',$request->id)->first();
+        $update = Shift::where('id',$request->shift_id)->first();
         $update->name = $request->name;
         $update->time_from = $request->time_from;
         $update->time_to = $request->time_to;
         $update->save();
 
-        $response = ['status'=>true,"message" => "Shift Updated Successfully!"];
-        return response($response, 200);
+        if ($request->wantsJson()) {
+            $response = ['status'=>true,"message" => "Shift Updated Successfully"];
+            return response($response, 200);
+            }
+    
+            session()->flash('success', 'Shift Updated Successfully');
+    
+            return redirect()->route('admin.shift.show');
     }
 
-    public function delete($id)
+    public function delete(Request $request, $id)
     {
         Shift::find($id)->delete();
 
-        $response = ['status'=>true,"message" => "Deleted Successfully!"];
-        return response($response, 200);
+        if ($request->wantsJson()) {
+            $response = ['status'=>true,"message" => "Shift Deleted Successfully"];
+            return response($response, 200);
+            }
+    
+            session()->flash('success', 'Shift Deleted Successfully');
+    
+            return redirect()->route('admin.shift.show');
 
     }
 
