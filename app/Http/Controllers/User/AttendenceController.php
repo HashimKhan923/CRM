@@ -12,21 +12,29 @@ use Carbon\Carbon;
 
 class AttendenceController extends Controller
 {
-    public function index($id)
+    public function index(Request $request, $id)
     {
-        $data = Time::with('user')->where('user_id',$id)->whereDate('created_at', Carbon::today('Asia/Karachi'))->get();
+        $attendences = Time::with('user')->where('user_id',$id)->whereDate('created_at', Carbon::today('Asia/Karachi'))->get();
 
-        return response()->json(['data'=>$data]);
+        if ($request->wantsJson()) {
+            return response()->json(['attendences'=>$attendences]);  
+        }
+
+        return view('user.attendences.index', compact('attendences')); 
     }
 
     public function search(Request $request)
     {
-        $data = Time::with('user')->where('created_at','>=',$request->from_date)->where('created_at','<=',$request->to_date)->where('user_id',$request->user_id)->get();
+        $attendences = Time::with('user')->where('created_at','>=',$request->from_date)->where('created_at','<=',$request->to_date)->where('user_id',$request->user_id)->get();
 
-        return response()->json(['data'=>$data]);
+        if ($request->wantsJson()) {
+            return response()->json(['attendences'=>$attendences]);  
+        }
+
+        return view('user.attendences.index', compact('attendences')); 
     }
 
-    public function time_in($id)
+    public function time_in(Request $request,$id)
     {
 
         
@@ -61,12 +69,27 @@ class AttendenceController extends Controller
                 $new->user_id = $id;
                 $new->time_in = Carbon::now('Asia/Karachi');
                 $new->save();
+
+                if ($request->wantsJson()) {
+                    $response = ['status'=>true,"message" => "Attendence Marked Successfully!"];
+                    return response($response, 200);
+                    }
+            
+                    session()->flash('success', 'Attendence Marked Successfully!');
+            
+                    return redirect()->back();
     
-                return response()->json(['message'=>'Attendence Marked Successfully!']);
             }
             else
             {
-                return response()->json(['message'=>'Your Attendence is Already Marked!']);
+                if ($request->wantsJson()) {
+                    $response = ['status'=>true,"message" => "Your Attendence is Already Marked!"];
+                    return response($response, 200);
+                    }
+            
+                    session()->flash('success', 'Your Attendence is Already Marked!');
+            
+                    return redirect()->back();
             }
 
 
@@ -74,7 +97,14 @@ class AttendenceController extends Controller
         }
         else
         {
-            return response()->json(['message'=>'Your shift is not started yet!']);
+            if ($request->wantsJson()) {
+                $response = ['status'=>true,"message" => "Your shift is not started yet!"];
+                return response($response, 200);
+                }
+        
+                session()->flash('success', 'Your shift is not started yet!');
+        
+                return redirect()->back();
         }
 
 
@@ -82,13 +112,19 @@ class AttendenceController extends Controller
 
     }
 
-    public function time_out($id)
+    public function time_out(Request $request,$id)
     {
         
         $time_out = Time::where('user_id',$id)->whereDate('created_at', Carbon::today())->first();
         $time_out->time_out = Carbon::now('Asia/Karachi');
         $time_out->save();
-
-        return response()->json(['message'=>'Time out Successfully!']);
+        if ($request->wantsJson()) {
+            $response = ['status'=>true,"message" => "Time out Successfully!"];
+            return response($response, 200);
+            }
+    
+            session()->flash('success', 'Time out Successfully!');
+    
+            return redirect()->back();
     }
 }

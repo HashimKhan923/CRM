@@ -27,6 +27,13 @@ class ShiftController extends Controller
 
     public function create(Request $request)
     {
+
+        $request->validate([
+            'name'=>'required',
+            'time_from'=>'required',
+            'time_to'=>'required',
+        ]);
+
         $new = new Shift();
         $new->name = $request->name;
         $new->time_from = $request->time_from;
@@ -45,6 +52,8 @@ class ShiftController extends Controller
 
     public function update_form($id)
     {
+
+        
         $data = Shift::where('id',$id)->first();
 
         return view('admin.shifts.update',compact('data'));
@@ -52,6 +61,12 @@ class ShiftController extends Controller
 
     public function update(Request $request)
     {
+        $request->validate([
+            'name'=>'required',
+            'time_from'=>'required',
+            'time_to'=>'required',
+        ]);
+
         $update = Shift::where('id',$request->shift_id)->first();
         $update->name = $request->name;
         $update->time_from = $request->time_from;

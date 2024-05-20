@@ -2,19 +2,18 @@
                 <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                     <div class="sb-sidenav-menu">
                         <div class="nav">
-                            <div class="sb-sidenav-menu-heading">Core</div>
-                            <a class="nav-link" href="{{route('admin.dashboard')}}">
+                            <a class="nav-link" href="{{route('user.dashboard',auth()->user()->id)}}">
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                                Dashboard
+                               User Dashboard
                             </a>
 
                                 <nav class="sb-sidenav-menu-nested nav">
-                                    <a  class="nav-link" href="{{route('admin.users.show')}}">Users</a>
+                                    <!-- <a  class="nav-link" href="{{route('admin.users.show')}}">Users</a>
                                     <a class="nav-link" href="{{route('admin.department.show')}}">Departments</a>
-                                    <a class="nav-link" href="{{route('admin.shift.show')}}">Shifts</a>
-                                    <a class="nav-link" href="{{route('admin.attendence.show')}}">Attendences</a>
-                                    <a class="nav-link" href="{{route('admin.break.show')}}">Breaks</a>
-                                    <a class="nav-link" href="{{route('admin.role.show')}}">Roles</a>
+                                    <a class="nav-link" href="{{route('admin.shift.show')}}">Shifts</a> -->
+                                    <a class="nav-link" href="{{route('user.attendence.show',auth()->user()->id)}}">Attendences</a>
+                                    <a class="nav-link" href="{{route('user.break.show',auth()->user()->id)}}">Breaks</a>
+                                    <!-- <a class="nav-link" href="{{route('admin.role.show')}}">Roles</a> -->
 
 
                                 </nav>
