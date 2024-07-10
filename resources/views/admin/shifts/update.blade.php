@@ -23,7 +23,8 @@
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                             </div>
-                                        
+                                        @php $data->time_from = \Carbon\Carbon::parse($data->time_from)->format('H:i');
+$data->time_to = \Carbon\Carbon::parse($data->time_to)->format('H:i'); @endphp
 
                                         <div class="form-group col-md-4">
                                             <label for="">From</label>
