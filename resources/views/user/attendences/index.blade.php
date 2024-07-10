@@ -9,14 +9,15 @@
     </ol>
 
     <div class="container mt-5">
-        <form class="row g-3 " style="margin-left: -83px">
+    <form action="{{route('user.attendence.search')}}" method="post" class="row g-3 " style="margin-left: -83px">
             <div class="col-md-4">
+                @csrf
                 <label for="inputName" class="form-label">From Date:</label>
-                <input type="date" class="form-control" id="inputName" placeholder="Name">
+                <input type="date" name="from_date" class="form-control" id="inputName" placeholder="Name">
             </div>
             <div class="col-md-4">
                 <label for="inputEmail" class="form-label">To Date:</label>
-                <input type="date" class="form-control" id="inputEmail" placeholder="Email">
+                <input type="date" name="to_date" class="form-control" id="inputEmail" placeholder="Email">
             </div>
             <div class="col-md-4 d-flex align-items-end">
                 <button type="submit" class="btn btn-primary">Search</button>
@@ -37,21 +38,26 @@
                     <tr>
                         <th>Name</th>
                         <th>Email</th>
-                        <th>Department</th>
-                        <th>Shift</th>
                         <th>Time in</th>
                         <th>Time out</th>
+                        <th>Total Time</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($attendences as $attendance)
                         <tr>
-                            <td>{{$attendance->user->name}}</td>
+                        <td>{{ $attendance->personalInfo->first_name . ' ' . $attendance->personalInfo->last_name }}</td>
                             <td>{{$attendance->user->email}}</td>
-                            <td>{{$attendance->user->department->name}}</td>
-                            <td>{{$attendance->user->shift->name}}</td>
                             <td>{{$attendance->time_in}}</td>
                             <td>{{$attendance->time_out}}</td>
+                            <td>
+                                @php
+                                    $timeIn = Carbon\Carbon::parse($attendance->time_in);
+                                    $timeOut = Carbon\Carbon::parse($attendance->time_out);
+                                    $difference = $timeIn->diff($timeOut);
+                                @endphp
+                                {{ $difference->format('%H:%I:%S') }}
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>

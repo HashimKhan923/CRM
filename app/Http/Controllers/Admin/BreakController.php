@@ -11,8 +11,7 @@ class BreakController extends Controller
 {
     public function index(Request $request)
     {
-        $breaks = Breaks::with('user')->whereDate('created_at',Carbon::today())->get();
-
+        $breaks = Breaks::whereDate('created_at',Carbon::today())->get();
         if ($request->wantsJson()) {
             return response()->json(['breaks'=>$breaks]);  
         }
@@ -22,8 +21,8 @@ class BreakController extends Controller
 
     public function search(Request $request)
     {
-        $from_date = Carbon::parse($request->from_date);
-        $to_date = Carbon::parse($request->to_date);
+        $from_date = Carbon::parse($request->from_date)->startOfDay();
+        $to_date = Carbon::parse($request->to_date)->endOfDay();
         $breaks = Breaks::with('user')->where('created_at','>=',$from_date)->where('created_at','<=',$to_date)->get();
 
         if ($request->wantsJson()) {

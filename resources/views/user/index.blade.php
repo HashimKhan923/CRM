@@ -11,61 +11,59 @@
         {{ session('success') }}
     </div>
     @endif
-    <div class="row" style="background-color:#343A40; color:white; padding-top:11px; border-radius:10px">
+    @if ($message != null)
+    <div class="alert alert-success">
+        {{$message}}
+    </div>
+    @endif
+    <div class="row text-white bg-dark py-3 rounded align-items-center text-center">
 
+<div class="col-md-4">
+    @if($currentTotalTime != null)
+    <h2>Total Time <span id="timer_h">{{$currentTotalTime->h}}</span>:<span id="timer_i">{{$currentTotalTime->i}}</span>:<span id="timer_s">{{$currentTotalTime->s}}</span> </h2>
+    @else
+    <h2>Total Time 00:00:00</h2>
+    @endif
+</div>
 
-            <div class="col-md-4">
-                @if($currentTotalTime != null)
-                <h2>Total Time <span id="timer_h">{{$currentTotalTime->h}}</span>:<span id="timer_i">{{$currentTotalTime->i}}</span>:<span id="timer_s">{{$currentTotalTime->s}}</span> </h2>
-                @else
-                <h2>Total Time 00:00:00</h2>
-                @endif
+<div class="col-md-4">
+    @if($remainingTime != '')
+    <h2>Remaining Time <span id="C_timer_h">{{$remainingTime->h}}</span>:<span id="C_timer_i">{{$remainingTime->i}}</span>:<span id="C_timer_s">{{$remainingTime->s}}</span> </h2>
+    @else
+    <h2>Remaining Time 00:00:00</h2>
+    @endif
+</div>
+
+<div class="col-md-2">
+    @if($currentTotalTime != null)
+    <div class="d-flex justify-content-center">
+        <a href="{{route('user.time_out',auth()->user()->id)}}" class="btn btn-danger mr-2">End Shift</a>
+        <div class="dropdown">
+            <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Break
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="{{ route('user.break_in', ['user_id' => auth()->user()->id, 'time_id' => $Time->id, 'break_type' => 'Prayer']) }}">Prayer</a>
+                <a class="dropdown-item" href="{{route('user.break_in',['user_id' => auth()->user()->id, 'time_id' => $Time->id, 'break_type' => 'Lunch'])}}">Lunch</a>
+                <a class="dropdown-item" href="{{route('user.break_in',['user_id' => auth()->user()->id, 'time_id' => $Time->id, 'break_type' => 'Tea'])}}">Tea</a>
+                <a class="dropdown-item" href="{{route('user.break_in',['user_id' => auth()->user()->id, 'time_id' => $Time->id, 'break_type' => 'Others'])}}">Others</a>
             </div>
-
-            <div class="col-md-4">
-            @if($remainingTime != '')
-                <h2>Remaining Time <span id="C_timer_h">{{$remainingTime->h}}</span>:<span id="C_timer_i">{{$remainingTime->i}}</span>:<span id="C_timer_s">{{$remainingTime->s}}</span> </h2>
-                @else
-                <h2>Remaining Time 00:00:00</h2>
-                @endif
-            </div>
-
-
-
-
-        <div class="col-md-2">
-        @if($currentTotalTime != null)
-        <div class="row">
-            <div class="col-md-6">
-            <a href="{{route('user.time_out',auth()->user()->id)}}" class="btn btn-danger">End Shift</a>
-            </div>
-        
-               <div class="col-md-6">
-               <div class="dropdown">
-               <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                   Break
-               </button>
-               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                   <a class="dropdown-item" href="{{ route('user.break_in', ['user_id' => auth()->user()->id, 'time_id' => $Time->id, 'break_type' => 'Prayer']) }}">Prayer</a>
-                   <a class="dropdown-item" href="{{route('user.break_in',['user_id' => auth()->user()->id, 'time_id' => $Time->id, 'break_type' => 'Lunch'])}}">Lunch</a>
-                   <a class="dropdown-item" href="{{route('user.break_in',['user_id' => auth()->user()->id, 'time_id' => $Time->id, 'break_type' => 'Tea'])}}">Tea</a>
-                   <a class="dropdown-item" href="{{route('user.break_in',['user_id' => auth()->user()->id, 'time_id' => $Time->id, 'break_type' => 'Others'])}}">Others</a>
-               </div>
-               </div>
-               </div>
-
-        </div>
-
-        @else
-        <a href="{{route('user.time_in',auth()->user()->id)}}" class="btn btn-primary">Start Shift</a>
-        @endif    
-        </div>
-        <div class="col-md-2">
-            <h5>Shift:@if(isset($ShiftN)) {{$ShiftN->name}} @endif</h5>
-            <hr style="background-color:white">
-            <h5>Total Time: @if(isset($totalShiftHours)){{$totalShiftHours}} Hrs @endif</h5>
         </div>
     </div>
+    @else
+    <a href="{{route('user.time_in',auth()->user()->id)}}" class="btn btn-primary">Start Shift</a>
+    @endif
+</div>
+
+<div class="col-md-2">
+    <h5>Shift: @if(isset($ShiftN)) {{$ShiftN->name}} @endif</h5>
+    <hr class="bg-white">
+    <p>{{$ShiftN->time_from}} - {{$ShiftN->time_to}}</p>
+    <hr class="bg-white">
+    <h5>Total Time: @if(isset($totalShiftHours)){{$totalShiftHours}} Hrs @endif</h5>
+</div>
+</div>
+
     <hr>
     <div class="row">
         <div class="col-xl-6">
@@ -196,7 +194,11 @@
 
         // Start the timer
         setInterval(updateTimer, 1000);
-        setInterval(updateCTimer, 1000);
+        if(C_hours >= 0)
+        {
+            setInterval(updateCTimer, 1000);
+        }
+        
     });
 </script>
 

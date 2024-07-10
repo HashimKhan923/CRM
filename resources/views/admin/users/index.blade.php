@@ -24,9 +24,10 @@
                                             <th>Name</th>
                                             <th>Email</th>
                                             <th>Phone</th>
-                                            <th>Designation</th>
                                             <th>Department</th>
                                             <th>Shift</th>
+                                            <th>Role</th>
+                                            <th>Manager</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
@@ -35,18 +36,20 @@
                                        
                                     @if($all_users)
                                         @foreach($all_users as $user)
-                                            <tr>
-                                                <td>{{$user->id}}</td>
-                                                <td>{{$user->name}}</td>
-                                                <td>{{$user->email}}</td>
-                                                <td>{{$user->phone_number}}</td>
-                                                <td>{{$user->designation}}</td>
-                                                <td>{{$user->department->name}}</td>
-                                                <td>{{$user->shift->name}}</td>
-                                                <td><a href="{{route('admin.users.update.form',$user->id)}}" class="btn btn-primary">Edit</a>
-                                                <a href="{{route('admin.users.delete',$user->id)}}" class="btn btn-danger">Delete</a>
-                                            </td>
-                                            </tr>
+                                        <tr>
+    <td>{{ $user->id }}</td>
+    <td>{{ optional($user->personalInfo)->first_name . ' ' . optional($user->personalInfo)->last_name ?? '' }}</td>
+    <td>{{ $user->email }}</td>
+    <td>{{ optional($user->contactInfo)->personal_phone ?? '' }}</td>
+    <td>{{ optional(optional($user->jobInfo)->department)->name ?? '' }}</td>
+    <td>{{ optional($user->shift)->name ?? '' }}</td>
+    <td>{{ optional($user->role)->name ?? '' }}</td>
+    <td>{{ optional(optional($user->jobInfo)->manager)->first_name . ' ' . optional(optional($user->jobInfo)->manager)->last_name ?? '<i>NULL</i>' }}</td>
+    <td>
+        <a href="{{ route('admin.users.update.form', $user->id) }}" class="btn btn-primary">Edit</a>
+        <a href="{{ route('admin.users.delete', $user->id) }}" class="btn btn-danger">Delete</a>
+    </td>
+</tr>
                                         @endforeach    
                                     @endif    
                                     </tbody>

@@ -90,7 +90,7 @@ Route::middleware(['admin'])->group(function () {
                 Route::group(['prefix' => '/admin/attendence/'], function() {
                 Route::controller(App\Http\Controllers\Admin\AttendenceController::class)->group(function () {
                 Route::get('show','index')->name('admin.attendence.show');
-                Route::post('search','search')->name('admin.break.search');
+                Route::post('search','search')->name('admin.attendence.search');
                 });
                 }); 
 
@@ -165,7 +165,11 @@ Route::middleware(['user'])->group(function () {
             });
         }); 
 
+        Route::view('/','index');
+
     });
+
+
 
 
 

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Shift;
 use App\Models\ProductVariant;
+use Carbon\Carbon;
 
 class ShiftController extends Controller
 {
@@ -36,8 +37,8 @@ class ShiftController extends Controller
 
         $new = new Shift();
         $new->name = $request->name;
-        $new->time_from = $request->time_from;
-        $new->time_to = $request->time_to;
+        $new->time_from = Carbon::parse($request->time_from)->format('g:i a');
+        $new->time_to = Carbon::parse($request->time_to)->format('g:i a');
         $new->save();
 
         if ($request->wantsJson()) {
@@ -69,8 +70,8 @@ class ShiftController extends Controller
 
         $update = Shift::where('id',$request->shift_id)->first();
         $update->name = $request->name;
-        $update->time_from = $request->time_from;
-        $update->time_to = $request->time_to;
+        $update->time_from = Carbon::parse($request->time_from)->format('g:i a');
+        $update->time_to = Carbon::parse($request->time_to)->format('g:i a');
         $update->save();
 
         if ($request->wantsJson()) {

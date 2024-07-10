@@ -11,5 +11,10 @@ class Breaks extends Model
     {
         return $this->hasOne(User::class,'id','user_id');
     }
+
+    public function personalInfo()
+    {
+        return $this->hasOne(PersonalInfo::class,'user_id','user_id');
+    }
     use HasFactory;
 }

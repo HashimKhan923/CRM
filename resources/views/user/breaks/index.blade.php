@@ -9,14 +9,15 @@
     </ol>
 
     <div class="container mt-5">
-        <form class="row g-3 " style="margin-left: -83px">
+    <form action="{{route('user.break.search')}}" method="post" class="row g-3 " style="margin-left: -83px">
             <div class="col-md-4">
+                @csrf
                 <label for="inputName" class="form-label">From Date:</label>
-                <input type="date" class="form-control" id="inputName" placeholder="Name">
+                <input type="date" name="from_date" class="form-control" id="inputName" placeholder="Name">
             </div>
             <div class="col-md-4">
                 <label for="inputEmail" class="form-label">To Date:</label>
-                <input type="date" class="form-control" id="inputEmail" placeholder="Email">
+                <input type="date" name="to_date" class="form-control" id="inputEmail" placeholder="Email">
             </div>
             <div class="col-md-4 d-flex align-items-end">
                 <button type="submit" class="btn btn-primary">Search</button>
@@ -33,25 +34,31 @@
     <div class="card mb-4 mt-4">
         <div class="card-body">
             <table id="datatablesSimple" class="table table-striped">
-                <thead>
+            <thead>
                     <tr>
                         <th>Name</th>
                         <th>Email</th>
-                        <th>Department</th>
-                        <th>Shift</th>
                         <th>Time in</th>
                         <th>Time out</th>
+                        <th>Total Break Time</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($breaks as $break)
                         <tr>
-                            <td>{{$break->user->name}}</td>
+                        <td>{{ $break->personalInfo->first_name . ' ' . $break->personalInfo->last_name }}</td>
+
                             <td>{{$break->user->email}}</td>
-                            <td>{{$break->user->department->name}}</td>
-                            <td>{{$break->user->shift->name}}</td>
                             <td>{{$break->time_in}}</td>
                             <td>{{$break->time_out}}</td>
+                            <td>
+                                @php
+                                    $timeIn = Carbon\Carbon::parse($break->time_in);
+                                    $timeOut = Carbon\Carbon::parse($break->time_out);
+                                    $difference = $timeIn->diff($timeOut);
+                                @endphp
+                                {{ $difference->format('%H:%I:%S') }}
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>

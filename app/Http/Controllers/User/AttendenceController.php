@@ -14,7 +14,7 @@ class AttendenceController extends Controller
 {
     public function index(Request $request, $id)
     {
-        $attendences = Time::with('user')->where('user_id',$id)->whereDate('created_at', Carbon::today('Asia/Karachi'))->get();
+        $attendences = Time::where('user_id',$id)->whereDate('created_at', Carbon::today('Asia/Karachi'))->get();
 
         if ($request->wantsJson()) {
             return response()->json(['attendences'=>$attendences]);  
@@ -25,7 +25,10 @@ class AttendenceController extends Controller
 
     public function search(Request $request)
     {
-        $attendences = Time::with('user')->where('created_at','>=',$request->from_date)->where('created_at','<=',$request->to_date)->where('user_id',$request->user_id)->get();
+        $from_date = Carbon::parse($request->from_date)->startOfDay();
+        $to_date = Carbon::parse($request->to_date)->endOfDay();
+
+        $attendences = Time::with('user')->where('created_at','>=',$from_date)->where('created_at','<=',$to_date)->where('user_id',auth()->user()->id)->get();
 
         if ($request->wantsJson()) {
             return response()->json(['attendences'=>$attendences]);  
@@ -56,7 +59,9 @@ class AttendenceController extends Controller
         $CurrentTime = Carbon::parse($CurrentTime);
 
 
-        
+        if ($ShiftTimeOut->lt($ShiftTimeIn)) {
+            $ShiftTimeOut->addDay();
+        }
 
         if($CurrentTime->gt($ShiftTimeIn) && $CurrentTime->lt($ShiftTimeOut))
         {

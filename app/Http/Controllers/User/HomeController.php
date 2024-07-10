@@ -69,8 +69,13 @@ class HomeController extends Controller
             $second = $currentTotalTime->s;
     
             $totalTime = Carbon::parse($hour.':'.$minute.':'.$second);
+            $ShifFrom = Carbon::parse($shiftk->time_from);
+            $ShifTo = Carbon::parse($shiftk->time_to);
+            if ($ShifTo->lt($ShifFrom)) {
+                $ShifTo = $ShifTo->addDay();
+            }
             
-            $remainingTime = Carbon::parse($shiftk->time_to)->diff($Time_now);
+            $remainingTime = Carbon::parse($ShifTo)->diff($Time_now);
 
 
 
@@ -85,6 +90,9 @@ class HomeController extends Controller
            if($totalTime->isAfter($shift))
            {
                 $message = "Shift Completed Successfully!";
+
+                $remainingTime = '';
+                $currentBreakTime = '';
            }
         }
 

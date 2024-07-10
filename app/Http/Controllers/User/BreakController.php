@@ -17,7 +17,7 @@ class BreakController extends Controller
 
     public function index(Request $request, $id)
     {
-        $breaks = Breaks::with('user')->where('user_id',$id)->whereDate('created_at', Carbon::today('Asia/Karachi'))->get();
+        $breaks = Breaks::where('user_id',$id)->whereDate('created_at', Carbon::today('Asia/Karachi'))->get();
 
         if ($request->wantsJson()) {
             return response()->json(['breaks'=>$breaks]);  
@@ -28,8 +28,8 @@ class BreakController extends Controller
 
     public function search(Request $request)
     {
-        $from_date = Carbon::parse($request->from_date);
-        $to_date = Carbon::parse($request->to_date);
+        $from_date = Carbon::parse($request->from_date)->startOfDay();
+        $to_date = Carbon::parse($request->to_date)->endOfDay();
         $breaks = Breaks::with('user')->where('user_id',$id)->where('created_at','>=',$from_date)->where('created_at','<=',$to_date)->get();
 
         if ($request->wantsJson()) {
@@ -83,14 +83,22 @@ class BreakController extends Controller
         $break_out->time_out = Carbon::now('Asia/Karachi');
         $break_out->save();
     
-        $start = Carbon::parse($break_out->time_in);
-        $end = Carbon::parse($break_out->time_out);
+        // $start = Carbon::parse($break_out->time_in);
+        // $end = Carbon::parse($break_out->time_out);
     
     
-        $diff = $end->diff($start);
-        $hours = $diff->h;
-        $minutes = $diff->i;
-        $seconds = $diff->s;
+        $Time_in = Carbon::parse($break_out->time_in)->toTimeString();
+        $Time_out = Carbon::parse($break_out->time_out)->toTimeString();
+        $Time_out = Carbon::parse($Time_out);
+        
+        $currentTotalTime = $Time_out->diff($Time_in);
+        // $currentTotalTime = Carbon::parse($currentTotalTime)->toTimeString();
+        
+        // $hours = $currentTotalTime->h;
+        // $minutes = $currentTotalTime->i;
+        // $seconds = $currentTotalTime->s;
+
+        // return $hours.':'.$minutes.':'.$seconds;
     
         $CurrentTime = Time::where('user_id', $break_out->user_id)
             ->whereDate('created_at', Carbon::today('Asia/Karachi'))
@@ -99,9 +107,7 @@ class BreakController extends Controller
         
         if ($CurrentTime) {
             $newStart = Carbon::parse($CurrentTime->time_in)
-                ->subHours($hours)
-                ->subMinutes($minutes)
-                ->subSeconds($seconds);
+            ->sub($currentTotalTime);
             
             $CurrentTime->time_in = $newStart;
             $CurrentTime->save();
