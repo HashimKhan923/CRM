@@ -300,7 +300,7 @@
                         <div class="form-group col-md-6">
                             <h6>Allowances</h6>
                             <div id="allowances">
-                                @if ($data->compensationInfo->allowances)
+                                @if ($data->compensationInfo && $data->compensationInfo->allowances)
                                     @foreach ($data->compensationInfo->allowances as $name => $value)
                                         <div class="form-row mb-2 d-flex align-items-center">
                                             <div class="col">
@@ -329,7 +329,7 @@
                         <div class="form-group col-md-6">
                             <h6>Deductions</h6>
                             <div id="deductions">
-                                @if ($data->compensationInfo->deductions)
+                                @if ($data->compensationInfo && $data->compensationInfo->deductions)
                                     @foreach ($data->compensationInfo->deductions as $name => $value)
                                         <div class="form-row mb-2 d-flex align-items-center">
                                             <div class="col">
