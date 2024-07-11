@@ -41,6 +41,7 @@
                         <th>Time in</th>
                         <th>Time out</th>
                         <th>Total Time</th>
+                        <th>Status</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -57,6 +58,17 @@
                                     $difference = $timeIn->diff($timeOut);
                                 @endphp
                                 {{ $difference->format('%H:%I:%S') }}
+                            </td>
+                            <td>
+                                @if($attendance->status == 'Absent')
+                                <span style="background-color:red; color:white; padding:6px; border-radius:20px">{{$attendance->status}}</span>
+                                @elseif($attendance->status == 'Short')
+                                <span style="background-color:orange; color:white; padding:6px; border-radius:20px">{{$attendance->status}}</span>
+                                @elseif($attendance->status == 'Half')
+                                <span style="background-color:light-blue; color:white; padding:6px; border-radius:20px">{{$attendance->status}}</span>
+                                @else
+                                <span style="background-color:green; color:white; padding:6px; border-radius:20px">{{$attendance->status}}</span>
+                                @endif
                             </td>
                         </tr>
                     @endforeach

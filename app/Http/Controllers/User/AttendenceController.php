@@ -37,85 +37,70 @@ class AttendenceController extends Controller
         return view('user.attendences.index', compact('attendences')); 
     }
 
-    public function time_in(Request $request,$id)
+    public function time_in(Request $request, $id)
     {
-
-        
-
-        $check_user = User::where('id',$id)->first();
-
-        $check_shift = Shift::where('id',$check_user->shift_id)->first();
-
+        $check_user = User::where('id', $id)->first();
+        $check_shift = Shift::where('id', $check_user->shift_id)->first();
+    
         $ShiftTimeIn = Carbon::parse($check_shift->time_from);
         $ShiftTimeOut = Carbon::parse($check_shift->time_to);
         $ShiftTimeIn = $ShiftTimeIn->toTimeString();
         $ShiftTimeOut = $ShiftTimeOut->toTimeString();
         $ShiftTimeIn = Carbon::parse($ShiftTimeIn);
         $ShiftTimeOut = Carbon::parse($ShiftTimeOut);
-        
-
+    
         $CurrentTime = Carbon::now('Asia/Karachi');
         $CurrentTime = $CurrentTime->toTimeString();
         $CurrentTime = Carbon::parse($CurrentTime);
-
-
+    
         if ($ShiftTimeOut->lt($ShiftTimeIn)) {
             $ShiftTimeOut->addDay();
         }
-
-        if($CurrentTime->gt($ShiftTimeIn) && $CurrentTime->lt($ShiftTimeOut))
-        {
-
-            $check = Time::where('user_id',$id)->whereDate('created_at', Carbon::today('Asia/Karachi'))->first();
-
-            if(!$check)
-            {
+    
+        if ($CurrentTime->gt($ShiftTimeIn) && $CurrentTime->lt($ShiftTimeOut)) {
+            $check = Time::where('user_id', $id)->whereDate('created_at', Carbon::today('Asia/Karachi'))->first();
+    
+            if (!$check) {
                 $new = new Time();
                 $new->user_id = $id;
                 $new->time_in = Carbon::now('Asia/Karachi');
-                $new->save();
-
-                if ($request->wantsJson()) {
-                    $response = ['status'=>true,"message" => "Attendence Marked Successfully!"];
-                    return response($response, 200);
-                    }
-            
-                    session()->flash('success', 'Attendence Marked Successfully!');
-            
-                    return redirect()->back();
     
-            }
-            else
-            {
-                if ($request->wantsJson()) {
-                    $response = ['status'=>true,"message" => "Your Attendence is Already Marked!"];
-                    return response($response, 200);
-                    }
-            
-                    session()->flash('success', 'Your Attendence is Already Marked!');
-            
-                    return redirect()->back();
-            }
-
-
-
-        }
-        else
-        {
-            if ($request->wantsJson()) {
-                $response = ['status'=>true,"message" => "Your shift is not started yet!"];
-                return response($response, 200);
+                // Check if the user is late
+                if ($CurrentTime->greaterThan($ShiftTimeIn->copy()->addMinutes(15))) {
+                    $new->late_status = 1;
                 }
-        
-                session()->flash('success', 'Your shift is not started yet!');
-        
+    
+                $new->save();
+    
+                if ($request->wantsJson()) {
+                    $response = ['status' => true, "message" => "Attendance Marked Successfully!"];
+                    return response($response, 200);
+                }
+    
+                session()->flash('success', 'Attendance Marked Successfully!');
                 return redirect()->back();
+    
+            } else {
+                if ($request->wantsJson()) {
+                    $response = ['status' => true, "message" => "Your Attendance is Already Marked!"];
+                    return response($response, 200);
+                }
+    
+                session()->flash('success', 'Your Attendance is Already Marked!');
+                return redirect()->back();
+            }
+    
+        } else {
+            if ($request->wantsJson()) {
+                $response = ['status' => true, "message" => "Your shift has not started yet!"];
+                return response($response, 200);
+            }
+    
+            session()->flash('success', 'Your shift has not started yet!');
+            return redirect()->back();
         }
-
-
-
-
     }
+    
 
     public function time_out(Request $request, $id)
     {
@@ -129,33 +114,36 @@ class AttendenceController extends Controller
             $shiftEnd->addDay();
         }
     
-        $totalShiftHours = $shiftEnd->diffInHours($shiftStart);
+        $totalShiftMinutes = $shiftEnd->diffInMinutes($shiftStart);
     
         $timeRecord = Time::where('user_id', $id)
-                          ->whereDate('created_at', Carbon::today())
+                          ->whereDate('created_at', Carbon::today('Asia/Karachi'))
                           ->first();
+    
+        if (!$timeRecord) {
+            return response()->json(['status' => false, 'message' => 'No time in record found for today'], 400);
+        }
     
         $timeRecord->time_out = Carbon::now('Asia/Karachi');
         $timeRecord->save();
     
-        $timeIn = Carbon::parse($timeRecord->time_in);
-        $timeOut = Carbon::parse($timeRecord->time_out);
-        
+        $timeIn = Carbon::parse($timeRecord->time_in, 'Asia/Karachi');
+        $timeOut = Carbon::parse($timeRecord->time_out, 'Asia/Karachi');
+    
         if ($timeOut->lessThan($timeIn)) {
             $timeOut->addDay();
         }
     
-        $totalAttendanceHours = $timeOut->diffInHours($timeIn);
+        $totalAttendanceMinutes = $timeOut->diffInMinutes($timeIn);
     
-        if ($timeIn->greaterThan($shiftStart->addMinutes(15))) {
-            $timeRecord->late_status = 1;
-        }
-        if ($totalAttendanceHours >= $totalShiftHours) {
-            $timeRecord->status = 'completed';
-        } elseif ($totalAttendanceHours >= $totalShiftHours / 2) {
-            $timeRecord->status = 'half';
-        } elseif ($totalAttendanceHours >= $totalShiftHours / 4) {
-            $timeRecord->status = 'short';
+        if ($totalAttendanceMinutes >= $totalShiftMinutes) {
+            $timeRecord->status = 'Completed';
+        } elseif ($totalAttendanceMinutes >= $totalShiftMinutes / 2) {
+            $timeRecord->status = 'Half';
+        } elseif ($totalAttendanceMinutes >= $totalShiftMinutes / 4) {
+            $timeRecord->status = 'Short';
+        } else {
+            $timeRecord->status = 'Absent';
         }
         
         $timeRecord->save();
@@ -167,6 +155,10 @@ class AttendenceController extends Controller
         session()->flash('success', 'Time out Successfully!');
         return redirect()->back();
     }
+    
+    
+    
+    
     
     
 }
