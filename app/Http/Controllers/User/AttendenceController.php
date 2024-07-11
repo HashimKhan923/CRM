@@ -148,8 +148,9 @@ class AttendenceController extends Controller
         $totalAttendanceHours = $timeOut->diffInHours($timeIn);
     
         if ($timeIn->greaterThan($shiftStart->addMinutes(15))) {
-            $timeRecord->status = 'late';
-        } elseif ($totalAttendanceHours >= $totalShiftHours) {
+            $timeRecord->late_status = 1;
+        }
+        if ($totalAttendanceHours >= $totalShiftHours) {
             $timeRecord->status = 'completed';
         } elseif ($totalAttendanceHours >= $totalShiftHours / 2) {
             $timeRecord->status = 'half';
