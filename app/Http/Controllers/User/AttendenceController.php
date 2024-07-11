@@ -117,19 +117,55 @@ class AttendenceController extends Controller
 
     }
 
-    public function time_out(Request $request,$id)
+    public function time_out(Request $request, $id)
     {
+        $user = User::find($id);
+        $shift = Shift::find($user->shift_id);
         
-        $time_out = Time::where('user_id',$id)->whereDate('created_at', Carbon::today())->first();
-        $time_out->time_out = Carbon::now('Asia/Karachi');
-        $time_out->save();
+        $shiftStart = Carbon::parse($shift->time_from);
+        $shiftEnd = Carbon::parse($shift->time_to);
+        
+        if ($shiftEnd->lessThan($shiftStart)) {
+            $shiftEnd->addDay();
+        }
+    
+        $totalShiftHours = $shiftEnd->diffInHours($shiftStart);
+    
+        $timeRecord = Time::where('user_id', $id)
+                          ->whereDate('created_at', Carbon::today())
+                          ->first();
+    
+        $timeRecord->time_out = Carbon::now('Asia/Karachi');
+        $timeRecord->save();
+    
+        $timeIn = Carbon::parse($timeRecord->time_in);
+        $timeOut = Carbon::parse($timeRecord->time_out);
+        
+        if ($timeOut->lessThan($timeIn)) {
+            $timeOut->addDay();
+        }
+    
+        $totalAttendanceHours = $timeOut->diffInHours($timeIn);
+    
+        if ($timeIn->greaterThan($shiftStart->addMinutes(15))) {
+            $timeRecord->status = 'late';
+        } elseif ($totalAttendanceHours >= $totalShiftHours) {
+            $timeRecord->status = 'completed';
+        } elseif ($totalAttendanceHours >= $totalShiftHours / 2) {
+            $timeRecord->status = 'half';
+        } elseif ($totalAttendanceHours >= $totalShiftHours / 4) {
+            $timeRecord->status = 'short';
+        }
+        
+        $timeRecord->save();
+    
         if ($request->wantsJson()) {
-            $response = ['status'=>true,"message" => "Time out Successfully!"];
-            return response($response, 200);
-            }
+            return response()->json(['status' => true, 'message' => 'Time out Successfully!'], 200);
+        }
     
-            session()->flash('success', 'Time out Successfully!');
-    
-            return redirect()->back();
+        session()->flash('success', 'Time out Successfully!');
+        return redirect()->back();
     }
+    
+    
 }
