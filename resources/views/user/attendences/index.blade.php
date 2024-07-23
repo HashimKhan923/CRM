@@ -60,14 +60,19 @@
                                 {{ $difference->format('%H:%I:%S') }}
                             </td>
                             <td>
+                            @if($attendance->late_status == 1)
+                            <span style="background-color:red; color:white; padding:6px; border-radius:5px">Late</span>
+                            @else
+                            <span style="background-color:green; color:white; padding:6px; border-radius:5px">On Time</span>
+                            @endif
                                 @if($attendance->status == 'Absent')
-                                <span style="background-color:red; color:white; padding:6px; border-radius:20px">{{$attendance->status}}</span>
+                                <span style="background-color:red; color:white; padding:6px; border-radius:5px">{{$attendance->status}}</span>
                                 @elseif($attendance->status == 'Short')
-                                <span style="background-color:orange; color:white; padding:6px; border-radius:20px">{{$attendance->status}}</span>
+                                <span style="background-color:orange; color:white; padding:6px; border-radius:5px">{{$attendance->status}}</span>
                                 @elseif($attendance->status == 'Half')
-                                <span style="background-color:light-blue; color:white; padding:6px; border-radius:20px">{{$attendance->status}}</span>
+                                <span style="background-color:light-blue; color:white; padding:6px; border-radius:5px">{{$attendance->status}}</span>
                                 @else
-                                <span style="background-color:green; color:white; padding:6px; border-radius:20px">{{$attendance->status}}</span>
+                                <span style="background-color:green; color:white; padding:6px; border-radius:5px">{{$attendance->status}}</span>
                                 @endif
                             </td>
                         </tr>

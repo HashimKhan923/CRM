@@ -15,7 +15,6 @@ use Illuminate\Support\Facades\Route;
 
 
 
-
 //common routes start
 Route::get('/login', '\App\Http\Controllers\AuthWebController@login_form')->name('login.form');
 Route::post('/login_process', '\App\Http\Controllers\AuthWebController@login')->name('login.process');
@@ -67,6 +66,22 @@ Route::middleware(['admin'])->group(function () {
                 Route::get('update_form/{id}','update_form')->name('admin.department.update.form');
                 Route::post('update','update')->name('admin.department.update');
                 Route::get('delete/{id}','delete')->name('admin.department.delete');
+                Route::get('status/{id}','changeStatus');
+                });
+                });
+                
+                
+                                /// Project \\\
+
+                Route::group(['prefix' => '/admin/project/'], function() {
+                Route::controller(App\Http\Controllers\Admin\ProjectController::class)->group(function () {
+                Route::get('show','index')->name('admin.project.show');
+                Route::get('create_form','create_form')->name('admin.project.create.form');
+                Route::post('create','create')->name('admin.project.create');
+                Route::get('get-users-by-manager/{managerId}','getUsersByManager');
+                Route::get('update_form/{id}','update_form')->name('admin.project.update.form');
+                Route::post('update','update')->name('admin.project.update');
+                Route::get('delete/{id}','delete')->name('admin.project.delete');
                 Route::get('status/{id}','changeStatus');
                 });
                 });

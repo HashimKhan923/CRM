@@ -15,5 +15,7 @@ class PersonalInfo extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    
     use HasFactory;
 }

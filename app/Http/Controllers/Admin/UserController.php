@@ -71,10 +71,14 @@ class UserController extends Controller
             'status' => 1
         ]);
 
-        $imagePath = null;
-
+        $imagePath = '';
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('profile', 'public');
+            $file = $request->file('image');
+            if ($file->isValid()) {
+                $fileName = time() . '_' . $file->getClientOriginalName();
+                $file->move(public_path('profile'), $fileName);
+                $imagePath = 'profile/' . $fileName;
+            }
         }
 
         $personal_info = PersonalInfo::create([
@@ -83,7 +87,7 @@ class UserController extends Controller
             'last_name'=> $request->last_name,
             'date_of_birth'=> $request->date_of_birth,
             'gender'=> $request->gender,
-            'image' => $imagePath,
+            'photo' => $imagePath,
         ]);
 
         $contact_info = ContactInfo::create([
@@ -211,8 +215,12 @@ class UserController extends Controller
         
         $imagePath = '';
         if ($request->hasFile('image')) {
-            
-            $imagePath = $request->file('image')->store('profile', 'public');
+            $file = $request->file('image');
+            if ($file->isValid()) {
+                $fileName = time() . '_' . $file->getClientOriginalName();
+                $file->move(public_path('profile'), $fileName);
+                $imagePath = 'profile/' . $fileName;
+            }
         }
     
         $user->personalInfo()->updateOrCreate(
@@ -222,7 +230,7 @@ class UserController extends Controller
                 'last_name' => $request->last_name,
                 'date_of_birth' => $request->date_of_birth,
                 'gender' => $request->gender,
-                'image' => $imagePath,
+                'photo' => $imagePath,
             ]
         );
     

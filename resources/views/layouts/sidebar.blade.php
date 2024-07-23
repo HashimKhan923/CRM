@@ -10,6 +10,7 @@
 
                                 <nav class="sb-sidenav-menu-nested nav">
                                     <a  class="nav-link" href="{{route('admin.users.show')}}">Users</a>
+                                    <a  class="nav-link" href="{{route('admin.project.show')}}">Projects</a>
                                     <a class="nav-link" href="{{route('admin.department.show')}}">Departments</a>
                                     <a class="nav-link" href="{{route('admin.shift.show')}}">Shifts</a>
                                     <a class="nav-link" href="{{route('admin.attendence.show')}}">Attendences</a>
