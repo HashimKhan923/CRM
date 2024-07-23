@@ -40,11 +40,11 @@
     <td>{{ $user->id }}</td>
     <td>{{ optional($user->personalInfo)->first_name . ' ' . optional($user->personalInfo)->last_name ?? '' }}</td>
     <td>{{ $user->email }}</td>
-    <td>{{ optional($user->contactInfo)->personal_phone ?? '' }}</td>
-    <td>{{ optional(optional($user->jobInfo)->department)->name ?? '' }}</td>
-    <td>{{ optional($user->shift)->name ?? '' }}</td>
-    <td>{{ optional($user->role)->name ?? '' }}</td>
-    <td>{{ optional(optional($user->jobInfo)->manager)->first_name . ' ' . optional(optional($user->jobInfo)->manager)->last_name ?? '<i>NULL</i>' }}</td>
+    <td>{{ optional($user->contactInfo)->personal_phone ?? 'N/A' }}</td>
+    <td>{{ optional(optional($user->jobInfo)->department)->name ?? 'N/A' }}</td>
+    <td>{{ optional($user->shift)->name ?? 'N/A' }}</td>
+    <td>{{ optional($user->role)->name ?? 'N/A' }}</td>
+    <td>{{ optional(optional($user->jobInfo)->manager)->first_name . ' ' . optional(optional($user->jobInfo)->manager)->last_name ?? '<i>N/A</i>' }}</td>
     <td>
         <a href="{{ route('admin.users.update.form', $user->id) }}" class="btn btn-primary">Edit</a>
         <a href="{{ route('admin.users.delete', $user->id) }}" class="btn btn-danger">Delete</a>
