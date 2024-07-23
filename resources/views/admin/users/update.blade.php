@@ -210,6 +210,13 @@
                             @enderror
                         </div>
                         <div class="form-group col-md-4">
+                            <label for="position">Position</label>
+                            <input type="number" class="form-control" name="position" vlaue="{{$data->jobInfo->position}}" id="position" placeholder="position">
+                            @error('position')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="form-group col-md-4">
                             <label for="shift_id">Shift</label>
                             <select id="shift_id" name="shift_id" class="form-control">
                                 <option>-- Select Shift --</option>

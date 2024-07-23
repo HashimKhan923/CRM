@@ -250,6 +250,13 @@
                             @enderror
                         </div>
                         <div class="form-group col-md-4">
+                            <label for="position">Position</label>
+                            <input type="number" class="form-control" name="position" id="position" placeholder="position">
+                            @error('position')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="form-group col-md-4">
                             <label for="manager_id">Manager</label>
                             <select id="manager_id" name="manager_id" class="form-control">
                                 <option value="">-- Select Manager --</option>
