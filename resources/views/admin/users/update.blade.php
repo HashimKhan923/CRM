@@ -211,7 +211,7 @@
                         </div>
                         <div class="form-group col-md-4">
                             <label for="position">Position</label>
-                            <input type="text" class="form-control" name="position" vlaue="{{$data->jobInfo->position}}" id="position" placeholder="position">
+                            <input type="text" class="form-control" name="position" value="{{$data->jobInfo->position}}" id="position" placeholder="position">
                             @error('position')
                                 <div class="text-danger">{{ $message }}</div>
                             @enderror
