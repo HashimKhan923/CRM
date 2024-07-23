@@ -237,8 +237,10 @@ class UserController extends Controller
         $user->contactInfo()->updateOrCreate(
             ['user_id' => $user->id],
             [
-            'work_email' => $request->work_email,
-            'personal_email' => $request->personal_email,
+            'work_email'=> $request->work_email,
+            'personal_email'=> $request->personal_email,
+            'work_phone'=> $request->work_phone,
+            'personal_phone'=> $request->personal_phone,
             'address' => $request->address,
             'city' => $request->city,
             'state' => $request->state,
