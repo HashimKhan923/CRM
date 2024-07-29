@@ -21,6 +21,23 @@
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                             </div>
+                                            <div class="form-group col-md-4">
+                                            <label for="">Deparment Location</label>
+                                            <input type="text" class="form-control" name="latitude" id="" placeholder="latitude">
+                                            @error('latitude')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                            <br>
+                                            <input type="text" class="form-control" name="longitude" id="" placeholder="longitude">
+                                            @error('longitude')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                            <br>
+                                            <input type="text" class="form-control" name="radius" id="" placeholder="radius">
+                                            @error('radius')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                            </div>
                                         </div>
 
                                         <button type="submit" class="btn btn-primary">Submit</button>

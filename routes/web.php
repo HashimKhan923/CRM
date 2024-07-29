@@ -15,6 +15,19 @@ use Illuminate\Support\Facades\Route;
 
 
 
+
+
+
+// common routes ends
+Route::view('/','index');
+Route::view('/admin/registration','admin_registration');
+Route::post('/admin/registration/process', '\App\Http\Controllers\SuperAdmin\TenantController@registerAdmin')->name('admin.registration.process');
+/// admin Register
+// Route::post('/admin/register', 'App\Http\Controllers\Admin\AuthController@register');
+
+Route::group(['middleware' => ['tenant']], function () {
+
+    // Tenant-specific routes
 //common routes start
 Route::get('/login', '\App\Http\Controllers\AuthWebController@login_form')->name('login.form');
 Route::post('/login_process', '\App\Http\Controllers\AuthWebController@login')->name('login.process');
@@ -22,12 +35,6 @@ Route::post('/forgetPassword', '\App\Http\Controllers\AuthWebController@forgetpa
 Route::post('/checktoken', '\App\Http\Controllers\AuthWebController@token_check');
 Route::post('/resetPassword', '\App\Http\Controllers\AuthWebController@reset_password');
 Route::get('/logout', 'App\Http\Controllers\AuthWebController@logout')->name('logout');
-
-
-// common routes ends
-
-/// admin Register
-Route::post('/admin/register', 'App\Http\Controllers\Admin\AuthController@register');
 
 Route::middleware(['admin'])->group(function () {
 
@@ -161,7 +168,7 @@ Route::middleware(['user'])->group(function () {
             Route::controller(App\Http\Controllers\User\AttendenceController::class)->group(function () {
                 Route::get('show/{id}','index')->name('user.attendence.show');
                 Route::post('search','search')->name('user.attendence.search');
-                Route::get('time_in/{id}','time_in')->name('user.time_in');
+                Route::post('time_in','time_in')->name('user.time_in');
                 Route::get('time_out/{id}','time_out')->name('user.time_out');
             });
         });
@@ -180,9 +187,12 @@ Route::middleware(['user'])->group(function () {
             });
         }); 
 
-        Route::view('/','index');
+        
 
     });
+
+
+});
 
 
 

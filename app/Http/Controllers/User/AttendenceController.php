@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Time;
 use App\Models\User;
 use App\Models\Shift;
+use App\Models\JobInfo;
+use App\Models\Department;
 use Carbon\Carbon;
 
 
@@ -37,11 +39,15 @@ class AttendenceController extends Controller
         return view('user.attendences.index', compact('attendences')); 
     }
 
-    public function time_in(Request $request, $id)
+    public function time_in(Request $request)
     {
-        $check_user = User::where('id', $id)->first();
+        $check_user = User::where('id', $request->user_id)->first();
         $check_shift = Shift::where('id', $check_user->shift_id)->first();
-    
+        $department = JobInfo::where('user_id',$request->user_id)->first();
+        $department = Department::where('id',$department->department_id)->first();
+        
+
+
         $ShiftTimeIn = Carbon::parse($check_shift->time_from);
         $ShiftTimeOut = Carbon::parse($check_shift->time_to);
         $ShiftTimeIn = $ShiftTimeIn->toTimeString();
@@ -52,17 +58,26 @@ class AttendenceController extends Controller
         $CurrentTime = Carbon::now('Asia/Karachi');
         $CurrentTime = $CurrentTime->toTimeString();
         $CurrentTime = Carbon::parse($CurrentTime);
+
+
+        if (!$this->isWithinOfficeLocation($request->latitude, $request->longitude, $department)) {
+
+            session()->flash('success', 'You are not in Department location!');
+            return redirect()->back();
+        }
+
+
     
         if ($ShiftTimeOut->lt($ShiftTimeIn)) {
             $ShiftTimeOut->addDay();
         }
     
         if ($CurrentTime->gt($ShiftTimeIn) && $CurrentTime->lt($ShiftTimeOut)) {
-            $check = Time::where('user_id', $id)->whereDate('created_at', Carbon::today('Asia/Karachi'))->first();
+            $check = Time::where('user_id', $request->user_id)->whereDate('created_at', Carbon::today('Asia/Karachi'))->first();
     
             if (!$check) {
                 $new = new Time();
-                $new->user_id = $id;
+                $new->user_id = $request->user_id;
                 $new->time_in = Carbon::now('Asia/Karachi');
     
                 // Check if the user is late
@@ -99,6 +114,25 @@ class AttendenceController extends Controller
             session()->flash('success', 'Your shift has not started yet!');
             return redirect()->back();
         }
+    }
+
+
+    private function isWithinOfficeLocation($latitude, $longitude, $department, $radius = 0)
+    {
+        $distance = $this->calculateDistance($latitude, $longitude, $department->latitude, $department->longitude);
+        $radius = $department->radius;
+
+        return $distance <= $radius;
+    }
+
+    private function calculateDistance($lat1, $lon1, $lat2, $lon2)
+    {
+        $earthRadius = 6371000; // meters
+        $dLat = deg2rad($lat2 - $lat1);
+        $dLon = deg2rad($lon2 - $lon1);
+        $a = sin($dLat / 2) * sin($dLat / 2) + cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * sin($dLon / 2) * sin($dLon / 2);
+        $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+        return $earthRadius * $c;
     }
     
 

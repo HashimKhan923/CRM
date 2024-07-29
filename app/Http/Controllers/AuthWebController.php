@@ -17,13 +17,13 @@ class AuthWebController extends Controller
     public function login(Request $request)
     {
         
+        
         $request->validate([
             'email' => 'required|email',
-            'password' => 'required|string|min:8',
+            'password' => 'required',
         ]);
 
         $user = User::where('email', $request->email)->first();
-
         if (!$user) {
 
             session()->flash('message', 'User does not exist!');
@@ -40,11 +40,15 @@ class AuthWebController extends Controller
             return redirect()->route('login.form');
         }
 
+        
+
         Auth::login($user);
 
         if ($user->role_id == 1) {
+            
             return redirect()->route('admin.dashboard');
         } else {
+            
             return redirect()->route('user.dashboard',auth()->user()->id);
         }
     }

@@ -25,17 +25,17 @@ class UsersTableSeeder extends Seeder
         ]);
     
         // Creating users
-        User::create([
-            'email' => 'admin@gmail.com',
-            'password' => Hash::make('admin123'),
-            'role_id' => 1,
-        ]);
+        // User::create([
+        //     'email' => 'admin@gmail.com',
+        //     'password' => Hash::make('admin123'),
+        //     'role_id' => 1,
+        // ]);
     
-        User::create([
-            'email' => 'user@gmail.com',
-            'password' => Hash::make('user123'),
-            'role_id' => 2,
-        ]);
+        // User::create([
+        //     'email' => 'user@gmail.com',
+        //     'password' => Hash::make('user123'),
+        //     'role_id' => 2,
+        // ]);
     }
     
 }
