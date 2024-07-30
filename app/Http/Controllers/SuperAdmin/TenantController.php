@@ -40,7 +40,7 @@ class TenantController extends Controller
     
             // Create user and grant privileges
             DB::statement("CREATE USER '$database_username'@'%' IDENTIFIED BY '$database_password'");
-            DB::statement("GRANT ALL PRIVILEGES ON $database_name.* TO 'busiaaak_crm_user'@'%'");
+            DB::statement("GRANT ALL PRIVILEGES ON $database_name.* TO '$database_username'@'%'");
         } catch (\Exception $e) {
             // Log the error
             \Log::error('Error creating database or user: ' . $e->getMessage());
