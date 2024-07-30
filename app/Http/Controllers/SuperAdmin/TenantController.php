@@ -36,8 +36,7 @@ class TenantController extends Controller
     
         // try {
             // Create database
-            DB::statement("CREATE DATABASE $database_name");
-    
+            DB::statement("CREATE DATABASE `$database_name`");    
             // Create user and grant privileges
             DB::statement("CREATE USER '$database_username'@'%' IDENTIFIED BY '$database_password'");
             DB::statement("GRANT ALL PRIVILEGES ON $database_name.* TO '$database_username'@'%'");
