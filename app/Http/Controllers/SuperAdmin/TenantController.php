@@ -38,21 +38,12 @@ class TenantController extends Controller
             // Create database
             DB::statement("CREATE DATABASE $database_name");
     
-            // Create user and grant privileges
-            DB::statement("CREATE USER '$database_username'@'%' IDENTIFIED BY '$database_password'");
-            DB::statement("GRANT ALL PRIVILEGES ON $database_name.* TO '$database_username'@'%'");
-
-            DB::statement("FLUSH PRIVILEGES");
-        // } catch (\Exception $e) {
-        //     // Log the error
-        //     \Log::error('Error creating database or user: ' . $e->getMessage());
-        //     return response()->json(['error' => $e->getMessage()], 500);
-        // }
-    
         // Update the tenant connection configuration
         config(['database.connections.tenant.database' => $database_name]);
-        config(['database.connections.tenant.username' => $database_username]);
-        config(['database.connections.tenant.password' => $database_password]);
+
+        DB::purge('tenant');
+        DB::reconnect('tenant');
+        DB::setDefaultConnection('tenant');
     
         DB::purge('tenant');
         DB::reconnect('tenant');
